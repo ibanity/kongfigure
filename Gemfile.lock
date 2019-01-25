@@ -1,0 +1,40 @@
+PATH
+  remote: .
+  specs:
+    kongfigure (0.0.1)
+      awesome_print
+      colorize
+      dry-inflector
+      rest-client (~> 2.0, >= 2.0.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    awesome_print (1.8.0)
+    colorize (0.8.1)
+    domain_name (0.5.20180417)
+      unf (>= 0.0.5, < 1.0.0)
+    dry-inflector (0.1.2)
+    http-cookie (1.0.3)
+      domain_name (~> 0.5)
+    mime-types (3.2.2)
+      mime-types-data (~> 3.2015)
+    mime-types-data (3.2018.0812)
+    netrc (0.11.0)
+    rest-client (2.0.2)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.7.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.16)
+  kongfigure!
+
+BUNDLED WITH
+   2.0.1
