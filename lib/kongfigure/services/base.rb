@@ -27,6 +27,7 @@ module Kongfigure::Services
           hash_resource["targets"]   = @http_client.get("#{resource_name}/#{hash_resource['id']}/targets")["data"]
         when "services"
           hash_resource["plugins"]   = @http_client.get("#{resource_name}/#{hash_resource['id']}/plugins")["data"]
+          hash_resource["routes"]    = @http_client.get("#{resource_name}/#{hash_resource['id']}/routes")["data"]
         end
         module_name.build(hash_resource)
       end
@@ -62,7 +63,7 @@ module Kongfigure::Services
     end
 
     def cleanup(http_client, resource, related_resource)
-      puts "-> Cleanup #{remote_resource.class.name} (#{remote_resource.identifier}).".colorize(:magenta)
+      puts "-> Cleanup #{related_resource.class.name} (#{related_resource.identifier}).".colorize(:magenta)
       http_client.delete("#{resource_name}/#{related_resource.id}")
     end
 

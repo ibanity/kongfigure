@@ -2,7 +2,7 @@ require "uri"
 module Kongfigure::Resources
   class Service < Base
     attr_accessor :name, :retries, :protocol, :host, :port, :path, :connect_timeout,
-                  :write_timeout, :read_timeout, :url
+                  :write_timeout, :read_timeout, :url, :routes
 
     def self.build(hash)
       service = new(hash["id"], hash["kongfigure_ignore_fields"])
@@ -16,6 +16,7 @@ module Kongfigure::Resources
       service.write_timeout   = hash["write_timeout"]
       service.read_timeout    = hash["read_timeout"]
       service.plugins         = Kongfigure::Resources::Plugin.build_all(hash["plugins"] || [])
+      service.routes          = Kongfigure::Resources::Route.build_all(hash["routes"] || [])
       service.url             = hash["url"] || URI::Generic.build({
         scheme: hash["protocol"],
         host:   hash["host"],
@@ -27,6 +28,10 @@ module Kongfigure::Resources
 
     def identifier
       name
+    end
+
+    def has_route?(route)
+      routes && routes.include?(route)
     end
 
     def api_attributes

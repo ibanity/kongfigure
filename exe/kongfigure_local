@@ -1,0 +1,6 @@
+#!/usr/bin/env ruby
+
+require_relative "../lib/kongfigure"
+
+ARGV << '-h' if ARGV.empty?
+Kongfigure.start(ARGV)

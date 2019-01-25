@@ -19,8 +19,8 @@ module Kongfigure::Services
     end
 
     def need_update_dependencies?(resource, related_resource)
-      super(resource, related_resource) &&
-        resource && (resource.acls != related_resource.acls || resource.key_auths != related_resource.key_auths)
+      super(resource, related_resource) ||
+        (resource && (resource.acls != related_resource.acls || resource.key_auths != related_resource.key_auths))
     end
 
     private
