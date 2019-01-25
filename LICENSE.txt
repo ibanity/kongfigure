@@ -1,6 +1,6 @@
 The MIT License (MIT)
 
-Copyright (c) 2018 Loic Vigneron
+Copyright (c) 2018 Ibanity, Isabel Group
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
