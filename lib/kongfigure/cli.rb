@@ -7,14 +7,14 @@ module Kongfigure
     def initialize
       @options       = {}
       @option_parser = OptionParser.new do |parser|
-        parser.on("-f", "--file FILE", "Path to the Kong configuration file.") do |file|
+        parser.on("-f", "--file FILE", "Path to the Kongfigure configuration file.") do |file|
           @options[:file] = file
         end
       end
     end
 
-    def parse!
-      @option_parser.parse!
+    def parse!(args)
+      @option_parser.parse!(args)
       @options
     end
   end

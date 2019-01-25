@@ -32,14 +32,15 @@ module Kongfigure
   def self.logger
     @logger ||= Logger.new(STDOUT)
   end
+
+  def self.start(args)
+    # CLI
+    cli           = Kongfigure::CLI.new
+    options       = cli.parse!(args)
+    # Parser
+    parser        = Kongfigure::Parser.new(options[:file])
+    http_client   = Kongfigure::HTTPClient.new
+    kong          = Kongfigure::Kong.new(parser, http_client)
+    kong.apply!
+  end
 end
-
-# CLI
-cli     = Kongfigure::CLI.new
-options = cli.parse!
-
-# Parser
-parser        = Kongfigure::Parser.new(options[:file])
-http_client   = Kongfigure::HTTPClient.new
-kong          = Kongfigure::Kong.new(parser, http_client)
-kong.apply!
