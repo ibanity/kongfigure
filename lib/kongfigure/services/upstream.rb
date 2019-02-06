@@ -16,8 +16,8 @@ module Kongfigure::Services
     end
 
     def need_update_dependencies?(resource, related_resource)
-      super(resource, related_resource) &&
-        resource && (resource.targets != related_resource.targets)
+      super(resource, related_resource) ||
+        (resource && (resource.targets != related_resource.targets))
     end
 
     private
