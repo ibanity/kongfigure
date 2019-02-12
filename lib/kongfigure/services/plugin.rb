@@ -11,7 +11,7 @@ module Kongfigure::Services
 
     def cleanup(http_client, resource, related_resource)
       return unless related_resource.is_global?
-      puts "-> Cleanup #{remote_resource.class.name} (#{remote_resource.identifier}).".colorize(:magenta)
+      puts "-> Cleanup #{related_resource.class.name} (#{related_resource.identifier}).".colorize(:magenta)
       http_client.delete("#{resource_name}/#{related_resource.id}")
     end
   end
