@@ -5,15 +5,16 @@ module Kongfigure
 
     def initialize(file)
       @yaml_configuration = File.read(file)
-      @configuration      = Kongfigure::Configuration.new
     end
 
     def parse!
+      return @configuration unless @configuration.nil?
+      @configuration = Kongfigure::Configuration.new
       puts "Parsing YAML configuration...".colorize(:color => :white, :background => :red)
       YAML.load(@yaml_configuration).each do |key, value|
         case key
-        when "host"
-          @configuration.host = value
+        when "url"
+          @configuration.url = value
         when "services"
           @configuration.add_services(value || [])
         when "consumers"

@@ -9,11 +9,11 @@ module Kongfigure
       accept_encoding: "gzip"
     }
 
-    def initialize
+    def initialize(parser, url)
       @configuration = {
         ssl_ca_path: nil,
         verify_ssl:  OpenSSL::SSL::VERIFY_NONE,
-        url:         "https://localhost:8445"
+        url:         url || parser.parse!.url
       }
       @inflector = Dry::Inflector.new
     end

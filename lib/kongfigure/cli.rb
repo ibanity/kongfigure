@@ -10,6 +10,9 @@ module Kongfigure
         parser.on("-f", "--file FILE", "Path to the Kongfigure configuration file.") do |file|
           @options[:file] = file
         end
+        parser.on("-u", "--url URL", "Url to the kong admin API.") do |url|
+          @options[:url] = url
+        end
       end
     end
 

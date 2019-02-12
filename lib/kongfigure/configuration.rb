@@ -5,10 +5,10 @@ require "awesome_print"
 module Kongfigure
   class Configuration
 
-    attr_accessor :host, :services, :consumers, :plugins, :upstreams
+    attr_accessor :url, :services, :consumers, :plugins, :upstreams
 
     def initialize
-      @host      = nil
+      @url       = nil
       @services  = []
       @consumers = []
       @plugins   = []
