@@ -1,7 +1,3 @@
-require "optparse"
-require "pp"
-require "awesome_print"
-
 module Kongfigure
   class Configuration
 

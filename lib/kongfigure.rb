@@ -27,6 +27,11 @@ require_relative "kongfigure/errors/invalid_configuration.rb"
 
 require "rest-client"
 require "logger"
+require "yaml"
+require "erb"
+require "optparse"
+require "pp"
+require "awesome_print"
 
 module Kongfigure
   def self.logger
@@ -38,7 +43,7 @@ module Kongfigure
     cli           = Kongfigure::CLI.new
     options       = cli.parse!(args)
     # Parser
-    parser        = Kongfigure::Parser.new(options[:file])
+    parser        = Kongfigure::Parser.new(options[:file], options[:debug])
     http_client   = Kongfigure::HTTPClient.new(parser, options[:url])
     kong          = Kongfigure::Kong.new(parser, http_client)
     kong.apply!

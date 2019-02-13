@@ -44,7 +44,7 @@ module Kongfigure::Services
       end
       # cleanup useless routes
       remote_resource.routes.each do |remote_resource_route|
-        unless local_resource.has_route?(remote_resource_route)
+        if local_resource.nil? || !local_resource.has_route?(remote_resource_route)
           http_client.delete("routes/#{remote_resource_route.id}")
         end
       end

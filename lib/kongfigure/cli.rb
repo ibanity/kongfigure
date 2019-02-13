@@ -5,13 +5,18 @@ module Kongfigure
     attr_accessor :options
 
     def initialize
-      @options       = {}
+      @options       = {
+        debug: false
+      }
       @option_parser = OptionParser.new do |parser|
         parser.on("-f", "--file FILE", "Path to the Kongfigure configuration file.") do |file|
           @options[:file] = file
         end
         parser.on("-u", "--url URL", "Url to the kong admin API.") do |url|
           @options[:url] = url
+        end
+        parser.on("-d", "--debug", "Debug mode.") do
+          @options[:debug] = true
         end
       end
     end

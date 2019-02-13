@@ -1,17 +1,18 @@
-require "yaml"
-
 module Kongfigure
   class Parser
 
-    def initialize(file)
-      @yaml_configuration = File.read(file)
+    def initialize(file, debug=false)
+      @yaml_erb_configuration = File.read(file)
+      @debug                  = debug
     end
 
     def parse!
       return @configuration unless @configuration.nil?
       @configuration = Kongfigure::Configuration.new
       puts "Parsing YAML configuration...".colorize(:color => :white, :background => :red)
-      YAML.load(@yaml_configuration).each do |key, value|
+      parsed_configuration = YAML.load(ERB.new(@yaml_erb_configuration).result)
+      ap parsed_configuration if @debug
+      parsed_configuration.each do |key, value|
         case key
         when "url"
           @configuration.url = value

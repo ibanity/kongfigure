@@ -155,7 +155,7 @@ module Kongfigure::Services
 
     def cleanup_plugins(http_client, local_resource, remote_resource)
       remote_resource.plugins.each do |plugin|
-        unless find_related_resource(plugin, local_resource.plugins)
+        if local_resource.nil? || find_related_resource(plugin, local_resource.plugins).nil?
           http_client.delete("#{resource_name}/#{remote_resource.identifier}/plugins/#{plugin.id}")
         end
       end
