@@ -35,36 +35,36 @@ module Kongfigure::Services
 
     def create_or_update(http_client, resource, remote_resources)
       handle_api_errors do
-        related_resource = find_related_resource(resource, remote_resources)
-        if related_resource && need_update?(resource, related_resource)
+        related_remote_resource = find_related_resource(resource, remote_resources)
+        if related_remote_resource && need_update?(resource, related_remote_resource)
           puts "-> Update #{resource.class.name} (#{resource.identifier}).".colorize(:light_blue)
-          update(http_client, resource, related_resource)
-        elsif related_resource && need_update_dependencies?(resource, related_resource)
+          update(http_client, resource, related_remote_resource)
+        elsif related_remote_resource && need_update_dependencies?(resource, related_remote_resource)
           puts "-> Update dependencies #{resource.class.name} (#{resource.identifier}).".colorize(:light_blue)
-          update_dependencies(http_client, resource, related_resource)
-        elsif related_resource
+          update_dependencies(http_client, resource, related_remote_resource)
+        elsif related_remote_resource
           #noop
         else
           puts "-> Create #{resource.class.name} (#{resource.identifier}).".colorize(:green)
-          create(http_client, resource, related_resource)
+          create(http_client, resource, related_remote_resource)
         end
       end
     end
 
-    def create(http_client, resource, related_resource)
+    def create(http_client, resource, _related_remote_resource)
       module_name = Kongfigure::Resources.const_get(self.class.to_s.split("::").last)
       data        = http_client.post("#{resource_name}", resource.api_attributes.to_json)
       create_dependencies(http_client, resource, module_name.build(data))
     end
 
-    def update(http_client, resource, related_resource)
-      http_client.put("#{resource_name}/#{related_resource.id}", resource.api_attributes.to_json) if need_update?(resource, related_resource)
-      update_dependencies(http_client, resource, related_resource)
+    def update(http_client, resource, related_remote_resource)
+      http_client.put("#{resource_name}/#{related_remote_resource.id}", resource.api_attributes.to_json) if need_update?(resource, related_resource)
+      update_dependencies(http_client, resource, related_remote_resource)
     end
 
-    def cleanup(http_client, resource, related_resource)
-      puts "-> Cleanup #{related_resource.class.name} (#{related_resource.identifier}).".colorize(:magenta)
-      http_client.delete("#{resource_name}/#{related_resource.id}")
+    def cleanup(http_client, resource, related_remote_resource)
+      puts "-> Cleanup #{related_remote_resource.class.name} (#{related_remote_resource.identifier}).".colorize(:magenta)
+      http_client.delete("#{resource_name}/#{related_remote_resource.id}")
     end
 
     def cleanup_useless_resources(http_client, local_resources, remote_resources)
@@ -72,7 +72,6 @@ module Kongfigure::Services
         related_local_resource = find_related_resource(remote_resource, local_resources)
         handle_api_errors do
           if need_cleanup_dependencies?(related_local_resource, remote_resource)
-
             cleanup_dependencies(http_client, related_local_resource, remote_resource)
           end
           unless related_local_resource
@@ -96,33 +95,33 @@ module Kongfigure::Services
       end
     end
 
-    def need_update?(resource, related_resource)
-      resource != related_resource
+    def need_update?(resource, related_remote_resource)
+      resource != related_remote_resource
     end
 
-    def need_update_dependencies?(resource, related_resource)
-      need_update_plugins?(resource, related_resource)
+    def need_update_dependencies?(resource, related_remote_resource)
+      need_update_plugins?(resource, related_remote_resource)
     end
 
-    def need_cleanup_dependencies?(resource, related_resource)
-      resource.nil? || need_cleanup_plugins?(resource, related_resource)
+    def need_cleanup_dependencies?(resource, related_remote_resource)
+      resource.nil? || need_cleanup_plugins?(resource, related_remote_resource)
     end
 
     def has_plugins?(resource)
       resource.plugins && resource.plugins.size > 0
     end
 
-    def update_dependencies(http_client, local_resource, remote_resource)
-      create_plugins(http_client, local_resource, remote_resource)
+    def update_dependencies(http_client, local_resource, related_remote_resource)
+      create_or_update_plugins(http_client, local_resource, related_remote_resource)
     end
 
-    def create_dependencies(http_client, local_resource, remote_resource)
-      create_plugins(http_client, local_resource, remote_resource)
+    def create_dependencies(http_client, local_resource, related_remote_resource)
+      create_or_update_plugins(http_client, local_resource, related_remote_resource)
     end
 
-    def cleanup_dependencies(http_client, local_resource, remote_resource)
-      puts "-> Cleanup dependencies #{remote_resource.class.name} (#{remote_resource.identifier}).".colorize(:magenta)
-      cleanup_plugins(http_client, local_resource, remote_resource)
+    def cleanup_dependencies(http_client, local_resource, related_remote_resource)
+      puts "-> Cleanup dependencies #{related_remote_resource.class.name} (#{related_remote_resource.identifier}).".colorize(:magenta)
+      cleanup_plugins(http_client, local_resource, related_remote_resource)
     end
 
     def handle_api_errors(&block)
@@ -133,21 +132,26 @@ module Kongfigure::Services
       end
     end
 
-    def need_update_plugins?(resource, related_resource)
+    def need_update_plugins?(resource, related_remote_resource)
       resource.plugins.reject do |plugin|
-        find_related_resource(plugin, related_resource.plugins)
+        related_plugin = find_related_resource(plugin, related_remote_resource.plugins)
+        related_plugin && plugin == related_plugin
       end.size != 0
     end
 
-    def need_cleanup_plugins?(resource, related_resource)
+    def need_cleanup_plugins?(resource, related_remote_resource)
       resource.plugins.reject do |plugin|
-        find_related_resource(plugin, related_resource.plugins)
-      end.size == 0 && resource.plugins.size < related_resource.plugins.size
+        related_remote_plugin = find_related_resource(plugin, related_remote_resource.plugins)
+        related_remote_plugin && plugin == related_remote_plugin
+      end.size == 0 && resource.plugins.size < related_remote_resource.plugins.size
     end
 
-    def create_plugins(http_client, local_resource, remote_resource)
+    def create_or_update_plugins(http_client, local_resource, remote_resource)
       local_resource.plugins.each do |plugin|
-        unless find_related_resource(plugin, remote_resource.plugins)
+        related_plugin = find_related_resource(plugin, remote_resource.plugins)
+        if related_plugin
+          http_client.patch("#{resource_name}/#{local_resource.identifier}/plugins/#{related_plugin.id}", plugin.api_attributes.to_json)
+        else
           http_client.post("#{resource_name}/#{local_resource.identifier}/plugins", plugin.api_attributes.to_json)
         end
       end

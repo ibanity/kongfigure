@@ -1,34 +1,34 @@
 module Kongfigure::Services
   class Service < Base
-    def create_dependencies(http_client, resource, related_resource)
-      super(http_client, resource, related_resource)
-      create_routes(http_client, resource, related_resource)
+    def create_dependencies(http_client, resource, related_remote_resource)
+      super(http_client, resource, related_remote_resource)
+      create_routes(http_client, resource, related_remote_resource)
     end
 
-    def update_dependencies(http_client, resource, related_resource)
-      super(http_client, resource, related_resource)
-      create_routes(http_client, resource, related_resource)
+    def update_dependencies(http_client, resource, related_remote_resource)
+      super(http_client, resource, related_remote_resource)
+      create_routes(http_client, resource, related_remote_resource)
     end
 
-    def cleanup_dependencies(http_client, resource, related_resource)
-      super(http_client, resource, related_resource)
-      cleanup_routes(http_client, resource, related_resource)
+    def cleanup_dependencies(http_client, resource, related_remote_resource)
+      super(http_client, resource, related_remote_resource)
+      cleanup_routes(http_client, resource, related_remote_resource)
     end
 
-    def need_cleanup_dependencies?(resource, related_resource)
-      super(resource, related_resource) || resource.nil? || resource.routes != related_resource.routes
+    def need_cleanup_dependencies?(resource, related_remote_resource)
+      super(resource, related_remote_resource) || resource.nil? || resource.routes != related_remote_resource.routes
     end
 
-    def need_update_dependencies?(resource, related_resource)
-      super(resource, related_resource) || (resource && (resource.routes != related_resource.routes))
+    def need_update_dependencies?(resource, related_remote_resource)
+      super(resource, related_remote_resource) || (resource && !related_remote_resource.has_routes?(resource.routes))
     end
 
     private
 
-    def create_routes(http_client, resource, related_resource)
+    def create_routes(http_client, resource, related_remote_resource)
       resource.routes.each do |route|
-        unless related_resource.has_route?(route)
-          http_client.post("#{resource_name}/#{related_resource.identifier}/routes", route.api_attributes.to_json)
+        unless related_remote_resource.has_route?(route)
+          http_client.post("#{resource_name}/#{related_remote_resource.identifier}/routes", route.api_attributes.to_json)
         end
       end
     end

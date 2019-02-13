@@ -30,8 +30,16 @@ module Kongfigure::Resources
       name
     end
 
-    def has_route?(route)
-      routes && routes.include?(route)
+    def has_route?(other_route)
+      routes && routes.find do |route|
+        other_route == route
+      end
+    end
+
+    def has_routes?(other_routes)
+      other_routes.reject do |other_route|
+        has_route?(other_route)
+      end.size == 0
     end
 
     def api_attributes
