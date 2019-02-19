@@ -58,7 +58,7 @@ module Kongfigure::Services
     end
 
     def update(http_client, resource, related_remote_resource)
-      http_client.put("#{resource_name}/#{related_remote_resource.id}", resource.api_attributes.to_json) if need_update?(resource, related_resource)
+      http_client.put("#{resource_name}/#{related_remote_resource.id}", resource.api_attributes.to_json) if need_update?(resource, related_remote_resource)
       update_dependencies(http_client, resource, related_remote_resource)
     end
 
