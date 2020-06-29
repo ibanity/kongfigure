@@ -1,13 +1,13 @@
 module Kongfigure::Services
   class Service < Base
     def create_dependencies(http_client, resource, related_remote_resource)
-      super(http_client, resource, related_remote_resource)
       create_routes(http_client, resource, related_remote_resource)
+      super(http_client, resource, related_remote_resource)
     end
 
     def update_dependencies(http_client, resource, related_remote_resource)
-      super(http_client, resource, related_remote_resource)
       create_routes(http_client, resource, related_remote_resource)
+      super(http_client, resource, related_remote_resource)
     end
 
     def cleanup_dependencies(http_client, resource, related_remote_resource)
