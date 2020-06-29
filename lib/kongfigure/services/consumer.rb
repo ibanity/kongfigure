@@ -43,7 +43,7 @@ module Kongfigure::Services
 
     def cleanup_key_auths(http_client, local_resource, remote_resource)
       remote_resource.key_auths.each do |remote_resource_key_auth|
-        unless local_resource.has_key_auth?(remote_resource_key_auth)
+        unless local_resource && local_resource.has_key_auth?(remote_resource_key_auth)
           http_client.delete("#{resource_name}/#{remote_resource.identifier}/key-auth/#{remote_resource_key_auth.id}")
         end
       end
@@ -51,7 +51,7 @@ module Kongfigure::Services
 
     def cleanup_acls(http_client, local_resource, remote_resource)
       remote_resource.acls.each do |remote_resource_acl|
-        unless local_resource.has_acl?(remote_resource_acl)
+        unless local_resource && local_resource.has_acl?(remote_resource_acl)
           http_client.delete("#{resource_name}/#{remote_resource.identifier}/acls/#{remote_resource_acl.id}")
         end
       end

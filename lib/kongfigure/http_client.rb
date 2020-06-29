@@ -41,7 +41,7 @@ module Kongfigure
     private
 
     def execute(options)
-      RestClient::Request.execute(options) do |response, _request, _result|
+      RestClient::Request.execute(options) do |response, request, _result|
         handle_response(response)
       end
     end
@@ -54,10 +54,12 @@ module Kongfigure
     end
 
     def request_options(method, path, payload = nil)
+      uri       = URI.join(@configuration[:url], path)
+      uri.query = [uri.query, "size=1000"].compact.join("&")
       opts = {
         method: method,
-        url: "#{@configuration[:url]}/#{path}",
-        headers: HTTP_HEADERS,
+        url: uri.to_s,
+        headers: HTTP_HEADERS
       }
 
       opts.merge!(ssl_options) if @configuration[:url].include?("https://")
@@ -81,7 +83,7 @@ module Kongfigure
       elsif response.code == 404
         raise Kongfigure::Errors::ResourceNotFound
       elsif response.code == 409
-        raise Kongfigure::Errors::ResourceConflict
+        #raise Kongfigure::Errors::ResourceConflict
       elsif response.code == 500
         raise Kongfigure::Errors::InternalServerError
       end
