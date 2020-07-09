@@ -19,23 +19,23 @@ module Kongfigure
     end
 
     def post(path, payload)
-      execute(request_options(:post, path, payload))
+      execute(request_options(:post, path, nil, payload))
     end
 
     def put(path, payload)
-      execute(request_options(:put, path, payload))
+      execute(request_options(:put, path, nil, payload))
     end
 
     def patch(path, payload)
-      execute(request_options(:patch, path, payload))
+      execute(request_options(:patch, path, nil, payload))
     end
 
-    def get(path)
-      execute(request_options(:get, path))
+    def get(path, size=nil)
+      execute(request_options(:get, path, size))
     end
 
     def delete(path)
-      execute(request_options(:delete, path))
+      execute(request_options(:delete, path, nil))
    end
 
     private
@@ -53,10 +53,13 @@ module Kongfigure
      }
     end
 
-    def request_options(method, path, payload = nil)
+    def request_options(method, path, size, payload = nil)
       uri       = URI.join(@configuration[:url], path)
-      uri.query = [uri.query, "size=1000"].compact.join("&")
-      opts = {
+      query     = [uri.query]
+      query     = query + ["size=#{size}"] if size
+      query     = query.compact
+      uri.query = query.join("&") if query.size > 0
+      opts      = {
         method: method,
         url: uri.to_s,
         headers: HTTP_HEADERS
