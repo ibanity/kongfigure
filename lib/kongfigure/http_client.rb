@@ -31,6 +31,7 @@ module Kongfigure
     end
 
     def get(path, size=nil)
+      size = size = 1000
       execute(request_options(:get, path, size))
     end
 

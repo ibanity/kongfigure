@@ -9,6 +9,10 @@ module Kongfigure::Resources
       target
     end
 
+    def api_name
+      "targets"
+    end
+
     def api_attributes
       {
         "target" => target,

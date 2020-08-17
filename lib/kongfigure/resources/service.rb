@@ -26,6 +26,10 @@ module Kongfigure::Resources
       service
     end
 
+    def api_name
+      "services"
+    end
+
     def identifier
       name
     end

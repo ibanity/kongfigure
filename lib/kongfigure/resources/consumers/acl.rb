@@ -9,6 +9,18 @@ module Kongfigure::Resources::Consumers
       acl
     end
 
+    def plugin_allowed?
+      false
+    end
+
+    def identifier
+      group
+    end
+
+    def api_name
+      "acls"
+    end
+
     def api_attributes
       {
         "group" => group

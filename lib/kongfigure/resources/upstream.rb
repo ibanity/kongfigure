@@ -31,6 +31,10 @@ module Kongfigure::Resources
       end
     end
 
+    def api_name
+      "upstreams"
+    end
+
     def api_attributes
       {
         "name"                 => name,

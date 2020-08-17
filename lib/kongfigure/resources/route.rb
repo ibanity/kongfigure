@@ -23,6 +23,18 @@ module Kongfigure::Resources
       name
     end
 
+    def api_name
+      "routes"
+    end
+
+    def display_name
+      if name.nil?
+        "default route"
+      else
+        "route (name: #{name})"
+      end
+    end
+
     def api_attributes
       {
         "name"           => name,
