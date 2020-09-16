@@ -4,6 +4,7 @@ module Kongfigure::Resources
                   :sources, :destinations, :service
 
     def self.build(hash)
+      raise "Route ID is missing for #{hash.inspect}" if hash["id"].nil?
       route                = new(hash["id"], hash["kongfigure_ignore_fields"])
       route.name           = hash["name"]
       route.protocols      = hash["protocols"]
@@ -20,7 +21,7 @@ module Kongfigure::Resources
     end
 
     def identifier
-      name
+      id
     end
 
     def api_name
@@ -37,6 +38,7 @@ module Kongfigure::Resources
 
     def api_attributes
       {
+        "id"             => id,
         "name"           => name,
         "protocols"      => protocols,
         "methods"        => methods,

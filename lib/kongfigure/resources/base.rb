@@ -6,7 +6,9 @@ module Kongfigure::Resources
     def initialize(id, kongfigure_ignore_fields = nil)
       @id                       = id
       @kongfigure_ignore_fields = (kongfigure_ignore_fields || []).map { |field| field.split(".") }
-      @kongfigure_ignore_fields.push("id")
+      if self.class != Kongfigure::Resources::Plugin && self.class != Kongfigure::Resources::Route
+        @kongfigure_ignore_fields.push("id")
+      end
       @plugins                  = []
       @updated                  = false
       @unchanged                = false
