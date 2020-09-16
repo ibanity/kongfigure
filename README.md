@@ -14,7 +14,7 @@ docker run --rm \
     -e "KONG_PG_HOST=kong-database" \
     -e "KONG_CASSANDRA_CONTACT_POINTS=kong-database" \
     -e "KONG_PG_PASSWORD"=kong \
-    kong:2.1.1-patched kong migrations bootstrap
+    registry.ibanity.net/docker-images/kong:latest kong migrations bootstrap
 
 docker run -ti --name kong \
     --link kong-database:kong-database \
@@ -31,7 +31,7 @@ docker run -ti --name kong \
     -p 8443:8443 \
     -p 8001:8001 \
     -p 8444:8444 \
-    kong:2.1.1-patched
+    registry.ibanity.net/docker-images/kong:latest
 ```
 ```
 ./exe/kongfigure_local -f test.yml

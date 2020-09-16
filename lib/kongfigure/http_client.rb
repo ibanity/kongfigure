@@ -87,7 +87,7 @@ module Kongfigure
       elsif response.code == 404
         raise Kongfigure::Errors::ResourceNotFound
       elsif response.code == 409
-        #raise Kongfigure::Errors::ResourceConflict
+        raise Kongfigure::Errors::ResourceConflict
       elsif response.code == 500
         raise Kongfigure::Errors::InternalServerError
       end
