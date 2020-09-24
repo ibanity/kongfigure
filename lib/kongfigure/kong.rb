@@ -19,8 +19,9 @@ module Kongfigure
 
     def apply!
       puts @configuration.to_s
-      puts "Fetching actual configuration"
-      @services
+      puts "Fetching actual configuration..."
+      puts "Do you want to apply this configuration to '#{@configuration.url}' (yes/no)".colorize(:color => :white, :background => :red)
+      exit 1 unless gets.strip.downcase == "yes"
       puts "Applying configuration...".colorize(:color => :white, :background => :red)
       SYNCHRONIZER_MODULES.each do |synchronizer_module|
         apply_all(@synchronizers[synchronizer_module])
