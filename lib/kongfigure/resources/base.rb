@@ -1,14 +1,21 @@
-require "dry/inflector"
-
 module Kongfigure::Resources
   class Base
 
-    attr_accessor :id, :kongfigure_ignore_fields, :plugins
+    attr_accessor :id, :kongfigure_ignore_fields, :plugins, :updated, :unchanged
 
     def initialize(id, kongfigure_ignore_fields = nil)
       @id                       = id
       @kongfigure_ignore_fields = (kongfigure_ignore_fields || []).map { |field| field.split(".") }
+      if self.class != Kongfigure::Resources::Plugin && self.class != Kongfigure::Resources::Route
+        @kongfigure_ignore_fields.push("id")
+      end
       @plugins                  = []
+      @updated                  = false
+      @unchanged                = false
+    end
+
+    def plugin_allowed?
+      true
     end
 
     def self.build_all(resources_hash)
@@ -18,10 +25,35 @@ module Kongfigure::Resources
     end
 
     def ==(other_object)
-      differences = deep_diff(other_object.api_attributes, api_attributes, kongfigure_ignore_fields)
-      differences.flatten.size == 0
+      differences       = deep_diff(other_object.api_attributes, api_attributes, kongfigure_ignore_fields)
+      differences_count = differences.flatten.size
+      if differences_count > 0
+        ap api_attributes
+        ap other_object.api_attributes
+        ap differences
+      end
+      differences_count == 0
     end
 
+    def display_name
+      identifier
+    end
+
+    def mark_as_updated
+      @updated = true
+    end
+
+    def mark_as_unchanged
+      @unchanged = true
+    end
+
+    def has_to_be_deleted?
+      @updated == false && @unchanged == false
+    end
+
+    def api_name
+      raise NotImplementedError
+    end
     private
 
     def deep_diff(a, b, ignore_nested_keys=[], level=0)

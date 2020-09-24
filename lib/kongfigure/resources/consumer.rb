@@ -18,6 +18,10 @@ module Kongfigure::Resources
       username
     end
 
+    def api_name
+      "consumers"
+    end
+
     def api_attributes
       {
         "username"  =>  username,

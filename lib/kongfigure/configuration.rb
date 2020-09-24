@@ -43,5 +43,14 @@ module Kongfigure
         upstreams: @upstreams.map do |upstream| upstream.to_s end
       }.ai
     end
+
+    def to_yaml
+      {
+        services:  @services.map  do |service| service.to_yaml end,
+        consumers: @consumers.map do |consumer| consumer.to_yaml end,
+        plugins:   @plugins.map   do |plugin| plugin.to_yaml end,
+        upstreams: @upstreams.map do |upstream| upstream.to_yaml end
+      }
+    end
   end
 end
