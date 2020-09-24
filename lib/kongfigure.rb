@@ -48,7 +48,6 @@ module Kongfigure
     options       = cli.parse!(args)
     # Parser
     parser        = Kongfigure::Parser.new(options[:file], options[:debug])
-    puts options[:url].inspect
     http_client   = Kongfigure::HTTPClient.new(parser, options[:url])
     kong          = Kongfigure::Kong.new(parser, http_client)
     kong.apply!
