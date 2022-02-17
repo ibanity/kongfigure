@@ -1,6 +1,6 @@
 module Kongfigure::Resources
   class Route < Base
-    attr_accessor :name, :protocols, :methods, :hosts, :paths, :regex_priority, :strip_path, :preserve_host, :snis,
+    attr_accessor :name, :protocols, :methods, :hosts, :headers, :paths, :regex_priority, :strip_path, :preserve_host, :snis,
                   :sources, :destinations, :service
 
     def self.build(hash)
