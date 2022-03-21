@@ -18,6 +18,10 @@ module Kongfigure
         parser.on("-d", "--debug", "Debug mode.") do
           @options[:debug] = true
         end
+        parser.on("-v", "--version", "Display version and exit.") do
+          puts "Kongfigure version: #{Kongfigure::VERSION}"
+          exit 0
+        end
       end
     end
 

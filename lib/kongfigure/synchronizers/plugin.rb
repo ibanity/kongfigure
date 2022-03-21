@@ -3,7 +3,7 @@ module Kongfigure::Synchronizers
 
     def load_all_remote_resources
       remote_resources = if parent_resource.nil?
-        super.filter do |resource|
+        super.select do |resource|
           resource.is_global?
         end
       else

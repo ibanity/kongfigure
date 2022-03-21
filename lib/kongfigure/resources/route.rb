@@ -1,6 +1,6 @@
 module Kongfigure::Resources
   class Route < Base
-    attr_accessor :name, :protocols, :methods, :hosts, :paths, :regex_priority, :strip_path, :preserve_host, :snis,
+    attr_accessor :name, :protocols, :methods, :hosts, :headers, :paths, :regex_priority, :strip_path, :preserve_host, :snis,
                   :sources, :destinations, :service
 
     def self.build(hash)
@@ -16,6 +16,7 @@ module Kongfigure::Resources
       route.sources        = hash["destinations"]
       route.service        = hash["service"]
       route.hosts          = hash["hosts"]
+      route.headers        = hash["headers"]
       route.plugins        = Kongfigure::Resources::Plugin.build_all(hash["plugins"] || [])
       route
     end
@@ -44,6 +45,7 @@ module Kongfigure::Resources
         "methods"        => methods,
         "paths"          => paths,
         "hosts"          => hosts,
+        "headers"        => headers,
         "regex_priority" => regex_priority,
         "strip_path"     => strip_path,
         "preserve_host"  => preserve_host,
